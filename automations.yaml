@@ -1,0 +1,54 @@
+# This is a sample file for an automation to take a snapshot from a camera, in
+# this case a Tapo C110, and save it to an archive folder. The automation is triggered
+# when the Bambu A1 Mini 3D printer starts printing, and it will take snapshots 
+# every 5 seconds until the printer goes idle. The snapshots are saved with a 
+# timestamp in the filename
+# You will eed to have installed the Advanced Snapshot custom component and 
+# configured it to work with your Tapo camera.
+# The snapshots are stored in the /config/www/bambu.jpg file for quick access, and 
+# also in a backup folder named after the model that was printed, on an external 
+# drive, e.g. a NAS, with a timestamped filename for archival purposes.
+
+- id: '1780919969182'
+  alias: Bambu Snapshot
+  description: Take Snapshot from Tapo camera and save to archive
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.bambu_a1_mini_current_stage
+    to:
+    - printing
+  conditions: []
+  actions:
+  - repeat:
+      until:
+      - condition: state
+        entity_id: sensor.bambu_a1_mini_current_stage
+        state:
+        - idle
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 10
+      sequence:
+      - action: advanced_snapshot.take_snapshot
+        metadata: {}
+        data:
+          setting_font_path: Arial.ttf
+          setting_font_size: auto
+          setting_font_color: black
+          setting_bar_height: 7%
+          setting_bar_color: white
+          setting_bar_position: bottom
+          camera_entity_id: camera.tapo_c110_hd_stream
+          file_path: /config/www/bambu.jpg
+          file_path_backup: /media/media/snapshots/bambu/{{states('sensor.bambu_a1_mini_task_name')}}/{{now().strftime('%Y-%m-%d_%H-%M-%S')}}.jpg
+        enabled: true
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+  - action: shell_command.create_timelapse
+    data:
+      clip: '{{states(''sensor.bambu_a1_mini_task_name'')}}'

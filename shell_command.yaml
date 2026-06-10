@@ -1,0 +1,13 @@
+# This is a snippet for a shell command that creates a timelapse video from the
+# snapshots taken by the automation.
+# The shell command uses SSH to connect to a remote server (example.com) where 
+# the timelapse creation script is located. The script takes the snapshots from the
+# specified base directory, which is organized by the model name of the printed 
+# object, and creates a timelapse video. The output video is saved to the specified 
+# output path on the remote server. You can then access the timelapse video from the 
+# remote server or set up a way to transfer it back to your Home Assistant server if 
+# needed.
+# You will need to have SSH access set up between your Home Assistant server and 
+# the remote server.
+create_timelapse:
+  ssh -i /config/.ssh/id_ed25519 -o 'StrictHostKeyChecking=no' user@examle.com src/Timelapse/bambu --base /backup/homeassistant/media/snapshots/bambu/{{ clip }} --out /home/dave/tmp
