@@ -39,6 +39,7 @@ def arg_parser() -> argparse.Namespace:
     parser.add_argument('--output', type=str, help="Output directory for timelapse videos", default=OUTPUT)
     parser.add_argument('--resolution', type=str, help="Resolution of timelapse videos", default=RESOLUTION)
     parser.add_argument('--codec', type=str, help="Video codec to use (e.g., x265, x264)", default="x265")
+    parser.add_argument('--duration', type=float, help="Time snapshot is shown", default=0.25)
     parser.add_argument('--keep', action="store_true", help="Keep original image files after processing")
 
     return parser.parse_args()
@@ -146,7 +147,7 @@ def main() -> None:
 
     files = gather_files()
     if files:
-        gen_video(files, 0.25)
+        gen_video(files, args.duration)
     else:
         if args.debug:
             print("No files found.")
