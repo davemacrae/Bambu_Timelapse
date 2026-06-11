@@ -31,6 +31,13 @@
           minutes: 0
           seconds: 10
       sequence:
+      # Choose one of these actions (or both)
+      - action: camera.snapshot
+        metadata: {}
+        target:
+          entity_id: camera.tapo_c110_hd_stream
+        data:
+          filename: /media/media/snapshots/bambu2/{{states('sensor.bambu_a1_mini_task_name')}}/{{now().strftime('%Y-%m-%d_%H-%M-%S')}}.jpg
       - action: advanced_snapshot.take_snapshot
         metadata: {}
         data:
@@ -43,6 +50,8 @@
           camera_entity_id: camera.tapo_c110_hd_stream
           file_path: /config/www/bambu.jpg
           file_path_backup: /media/media/snapshots/bambu/{{states('sensor.bambu_a1_mini_task_name')}}/{{now().strftime('%Y-%m-%d_%H-%M-%S')}}.jpg
+          add_bar: true
+          custom_text_middle: "Layer {{states(\"sensor.bambu_a1_mini_current_layer\")}} of {{states(\"sensor.bambu_a1_mini_total_layer_count\")}}"
         enabled: true
       - delay:
           hours: 0
