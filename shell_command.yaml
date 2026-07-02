@@ -10,4 +10,4 @@
 # You will need to have SSH access set up between your Home Assistant server and 
 # the remote server.
 create_timelapse:
-  ssh -i /config/.ssh/id_ed25519 -o 'StrictHostKeyChecking=no' user@examle.com src/Timelapse/bambu --base /backup/homeassistant/media/snapshots/bambu/{{ clip }} --out /home/dave/tmp
+  ssh -i /config/.ssh/id_ed25519 -o 'StrictHostKeyChecking=no' user@examle.com src/Timelapse/bambu --base /backup/homeassistant/media/snapshots/bambu/"'{{ clip }}'" --out /tmp
